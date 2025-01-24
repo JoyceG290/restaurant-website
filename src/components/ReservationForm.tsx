@@ -1,97 +1,181 @@
-import React, { useState, FormEvent } from 'react';
-import { TextField, Button, Box, Typography, Container } from '@mui/material';
+import React, { useState } from 'react';
+import { Box, TextField, Button, Grid, Typography } from '@mui/material';
 import DatePicker from 'react-datepicker';
 import "react-datepicker/dist/react-datepicker.css";
 
-const ReservationForm: React.FC = () => {
-  const [name, setName] = useState('');
-  const [persons, setPersons] = useState('');
-  const [date, setDate] = useState<Date | null>(null);
-  const [time, setTime] = useState('');
+interface ReservationFormProps {
+  onSubmit?: (data: ReservationData) => void;
+}
 
-  const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
+interface ReservationData {
+  name: string;
+  email: string;
+  phone: string;
+  guests: string;
+  date: Date | null;
+  time: string;
+  specialRequests: string;
+}
+
+const ReservationForm: React.FC<ReservationFormProps> = ({ onSubmit }) => {
+  const [formData, setFormData] = useState<ReservationData>({
+    name: '',
+    email: '',
+    phone: '',
+    guests: '',
+    date: null,
+    time: '',
+    specialRequests: ''
+  });
+
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+    const { name, value } = e.target;
+    setFormData(prev => ({
+      ...prev,
+      [name]: value
+    }));
+  };
+
+  const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    // Handle form submission logic here
-    console.log({ name, persons, date, time });
+    if (onSubmit) {
+      onSubmit(formData);
+    }
+    // Reset form
+    setFormData({
+      name: '',
+      email: '',
+      phone: '',
+      guests: '',
+      date: null,
+      time: '',
+      specialRequests: ''
+    });
   };
 
   return (
-    <Container maxWidth="sm">
-      <Box
-        sx={{
-          backgroundColor: 'rgba(0, 0, 0, 0.8)',
-          padding: 4,
-          borderRadius: 2,
-          color: 'white',
-        }}
-      >
-        <Typography variant="h4" component="h2" gutterBottom align="center" 
-          sx={{ fontFamily: "'Playfair Display', serif" }}>
-          Reserve Your Table
-        </Typography>
-        <Typography variant="subtitle1" gutterBottom align="center" sx={{ mb: 4 }}>
-          Book a table in advance to enjoy your time with friends & family
-        </Typography>
-        
-        <form onSubmit={handleSubmit}>
+    <Box component="form" onSubmit={handleSubmit} sx={{ mt: 4 }}>
+      <Grid container spacing={3}>
+        <Grid item xs={12}>
+          <Typography variant="h4" gutterBottom>
+            Make a Reservation
+          </Typography>
+        </Grid>
+        <Grid item xs={12} sm={6}>
           <TextField
+            required
             fullWidth
-            label="Your Name"
-            value={name}
-            onChange={(e) => setName(e.target.value)}
-            sx={{ mb: 2, input: { color: 'white' }, label: { color: 'white' } }}
-            variant="outlined"
+            label="Name"
+            name="name"
+            value={formData.name}
+            onChange={handleChange}
           />
-          
+        </Grid>
+        <Grid item xs={12} sm={6}>
           <TextField
+            required
             fullWidth
-            label="Number of Persons"
+            label="Email"
+            name="email"
+            type="email"
+            value={formData.email}
+            onChange={handleChange}
+          />
+        </Grid>
+        <Grid item xs={12} sm={6}>
+          <TextField
+            required
+            fullWidth
+            label="Phone"
+            name="phone"
+            value={formData.phone}
+            onChange={handleChange}
+          />
+        </Grid>
+        <Grid item xs={12} sm={6}>
+          <TextField
+            required
+            fullWidth
+            label="Number of Guests"
+            name="guests"
             type="number"
-            value={persons}
-            onChange={(e) => setPersons(e.target.value)}
-            sx={{ mb: 2, input: { color: 'white' }, label: { color: 'white' } }}
-            variant="outlined"
+            value={formData.guests}
+            onChange={handleChange}
+            inputProps={{ min: "1", max: "10" }}
           />
-          
-          <Box sx={{ mb: 2 }}>
+        </Grid>
+        <Grid item xs={12} sm={6}>
+          <Box sx={{ 
+            '& .react-datepicker-wrapper': { 
+              width: '100%' 
+            },
+            '& .react-datepicker__input-container input': {
+              width: '100%',
+              padding: '16.5px 14px',
+              border: '1px solid rgba(0, 0, 0, 0.23)',
+              borderRadius: '4px',
+              fontSize: '1rem',
+              '&:hover': {
+                borderColor: 'rgba(0, 0, 0, 0.87)'
+              },
+              '&:focus': {
+                borderColor: '#1976d2',
+                borderWidth: '2px',
+                outline: 'none'
+              }
+            }
+          }}>
             <DatePicker
-              selected={date}
-              onChange={(date: Date) => setDate(date)}
+              selected={formData.date}
+              onChange={(date: Date | null) => setFormData(prev => ({ ...prev, date }))}
               dateFormat="MMMM d, yyyy"
               minDate={new Date()}
               placeholderText="Select Date"
-              className="custom-datepicker"
+              required
             />
           </Box>
-          
+        </Grid>
+        <Grid item xs={12} sm={6}>
           <TextField
+            required
             fullWidth
             label="Preferred Time"
+            name="time"
             type="time"
-            value={time}
-            onChange={(e) => setTime(e.target.value)}
-            InputLabelProps={{ shrink: true }}
-            sx={{ mb: 3, input: { color: 'white' }, label: { color: 'white' } }}
-            variant="outlined"
+            value={formData.time}
+            onChange={handleChange}
+            InputLabelProps={{
+              shrink: true,
+            }}
+            inputProps={{
+              step: 300, // 5 min
+            }}
           />
-          
+        </Grid>
+        <Grid item xs={12}>
+          <TextField
+            fullWidth
+            label="Special Requests"
+            name="specialRequests"
+            multiline
+            rows={4}
+            value={formData.specialRequests}
+            onChange={handleChange}
+          />
+        </Grid>
+        <Grid item xs={12}>
           <Button
             type="submit"
             variant="contained"
+            size="large"
             fullWidth
-            sx={{
-              backgroundColor: '#CD853F',
-              '&:hover': {
-                backgroundColor: '#8B4513',
-              },
-              py: 1.5,
-            }}
+            sx={{ mt: 2 }}
           >
-            Reserve A Table
+            Make Reservation
           </Button>
-        </form>
-      </Box>
-    </Container>
+        </Grid>
+      </Grid>
+    </Box>
   );
 };
 
