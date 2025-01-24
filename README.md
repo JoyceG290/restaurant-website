@@ -13,7 +13,7 @@ A modern restaurant website built with React, Material-UI, and TypeScript. Featu
 
 ## Technologies Used
 
-- React 18
+- React 18 (Create React App)
 - TypeScript
 - Material-UI
 - Framer Motion
@@ -30,7 +30,7 @@ A modern restaurant website built with React, Material-UI, and TypeScript. Featu
    - Select "Connect to Git"
 
 3. Configure your build settings:
-   - Framework preset: Create React App
+   - Framework preset: Create React App (not Vite or React Static)
    - Build command: `npm run build`
    - Build output directory: `build`
    - Environment variables (if needed):
@@ -77,3 +77,4 @@ REACT_APP_STRIPE_PUBLIC_KEY=your_stripe_publishable_key
 - The site uses client-side routing, which is handled by the `_redirects` file for Cloudflare Pages
 - All API keys should be kept secure and never committed to the repository
 - Images are served from a CDN for optimal performance
+- This project uses Create React App (CRA) for the build system
