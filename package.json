@@ -16,9 +16,11 @@
     "@types/jest": "^27.5.2",
     "@types/node": "^16.18.70",
     "@types/react": "^18.2.47",
+    "@types/react-datepicker": "^6.2.0",
     "@types/react-dom": "^18.2.18",
     "framer-motion": "^10.18.0",
     "react": "^18.2.0",
+    "react-datepicker": "^7.6.0",
     "react-dom": "^18.2.0",
     "react-router-dom": "^6.21.2",
     "react-scripts": "5.0.1",
@@ -48,5 +50,8 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
+  },
+  "devDependencies": {
+    "@babel/plugin-proposal-private-property-in-object": "^7.21.11"
   }
 }
